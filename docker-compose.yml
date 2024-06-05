@@ -162,6 +162,4 @@ services:
   mongodb:
     container_name: mongo
     image: mongo:6.0.2
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
+    command: --replSet rs0
