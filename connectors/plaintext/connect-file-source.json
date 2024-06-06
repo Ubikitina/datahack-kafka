@@ -4,7 +4,7 @@
     "connector.class": "com.github.jcustenborder.kafka.connect.spooldir.SpoolDirCsvSourceConnector",
     "tasks.max": 1,
     "input.path": "/tmp/input",
-    "input.file.pattern": "training.10.processed.noemoticon.csv",
+    "input.file.pattern": "^twitter-extract-.*\\.csv",
     "finished.path": "/tmp/finok",
     "error.path": "/tmp/finerr",
     "topic": "tweets-input",

@@ -4,7 +4,7 @@ RUN confluent-hub install --no-prompt jcustenborder/kafka-connect-spooldir:2.0.6
 
 RUN mkdir /tmp/input && mkdir /tmp/finok && mkdir /tmp/finerr && exit
 
-COPY ./plaintext/dataset/training.10.processed.noemoticon.csv /tmp/input/training.10.processed.noemoticon.csv
+COPY ./plaintext/dataset/twitter-extract-01.csv /tmp/input/twitter-extract-01.csv
 
 COPY ./plaintext/connect-file-source.json .
 
