@@ -195,6 +195,19 @@ services:
       - dh-kafka-network
     depends_on:
       - broker
+  
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb # use the name of the mongo container
+    ports:
+      - 3000:8081
+    depends_on:
+      - mongodb
+    networks:
+      - dh-kafka-network
+    
 
 networks:
   dh-kafka-network:

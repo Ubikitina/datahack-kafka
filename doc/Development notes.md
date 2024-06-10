@@ -139,3 +139,13 @@ Añadir más documentos (haciendo la copia de los datos) y comprobar que aparece
 
 
 
+## Añadir Mongo Express
+
+Para conectarme, hay que introducir:
+- Usuario: admin
+- Contraseña: pass
+
+Dentro veremos que están los tweets en la colección `sentiment_tweets`.
+
+Añadir más documentos (haciendo la copia de los datos) y comprobar que aparecen en mongo volviendo a hacer `db.sentiment_tweets.find().pretty()`.
+
