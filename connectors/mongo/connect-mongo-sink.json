@@ -1,0 +1,19 @@
+{
+  "name": "mongo-sink",
+  "config": {
+    "connector.class": "com.mongodb.kafka.connect.MongoSinkConnector",
+    "topics": "analyzed-tweets",
+    "connection.uri": "mongodb://mongo:27017",
+    "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+    "value.converter":"org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": false,
+    "database": "twitter_data",
+    "collection": "sentiment_tweets",
+    "tasks.max": 1,
+    "poll.max.batch.size": 1000,
+    "poll.await.time.ms": 5000,
+    "pipeline":"[]",
+    "batch.size": 0,
+    "change.stream.full.document": "updateLookup"
+  }
+}

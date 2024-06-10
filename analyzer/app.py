@@ -10,7 +10,7 @@ import logging
 
 
 # Kafka consumer configuration
-kafka_brokers = ['broker']
+kafka_brokers = ['broker:19092']
 input_topic_name = 'tweets-input'
 output_topic_name = 'analyzed-tweets'
 
@@ -55,6 +55,7 @@ def on_send_error(ex):
   log.error('I am an Error', exc_info=ex)
   # handle exception
 
+print("Start creating the consumer.")
 
 # Crear el consumer
 consumer = KafkaConsumer(input_topic_name,
@@ -62,13 +63,18 @@ consumer = KafkaConsumer(input_topic_name,
                          bootstrap_servers=kafka_brokers,
                          auto_offset_reset='earliest')
 
+print("Consumer created. Subscription started.")
+
 consumer.subscribe([input_topic_name])
+
+print("Subscription created. Start creating the producer.")
 
 # Crear el producer
 producer = KafkaProducer(
     bootstrap_servers=kafka_brokers,
     value_serializer=lambda m: json.dumps(m).encode('utf-8')) # Utilizaremos la libreria JSON para serializar nuestros mensajes
 
+print("Producer created. Start processing the messages.")
 
 # Para cada mensaje consumido por el consumer
 for message in consumer:
@@ -78,10 +84,11 @@ for message in consumer:
   
   # Analizamos el sentimiento del tweet
   sentiment = sentiment_pipeline([message_dict.get('tweet')])[0] # Example: {'label': 'POS', 'score': 0.5627670288085938}
-  
-  # Combinamos los diccionarios
-  message_dict.update({'sentiment': sentiment})
-  # Example: {'tweet_id': 2018926307, 'date': 'Wed Jun 03 10:43:39 PDT 2009', 'username': 'Mia_R', 'tweet': "@simalves LOL i was contemplating on doing the same thing Sim! but i really need to sleep... i'll stay for a few more minutes... ", 'sentiment': {'label': 'POS', 'score': 0.5627670288085938}}
+
+  # Añadir los datos al diccionario original con nuevas claves
+  message_dict['sentiment_label'] = sentiment['label']
+  message_dict['sentiment_score'] = sentiment['score']
+  # Example: {'tweet_id': 2018926307, 'date': 'Wed Jun 03 10:43:39 PDT 2009', 'username': 'Mia_R', 'tweet': "@simalves LOL i was contemplating on doing the same thing Sim! but i really need to sleep... i'll stay for a few more minutes... ", 'sentiment_label': 'POS', 'sentiment_score': 0.5627670288085938}
 
   # Imprimimos el mensaje de evento analizado
   print(f"Event analyzed: {message_dict}")

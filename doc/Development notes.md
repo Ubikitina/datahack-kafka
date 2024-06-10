@@ -42,30 +42,113 @@ Especificaciones:
 - Debe analizar los sentimientos de los tweets uno a uno - real time.
 - Envía el resultado al topic de kafka `analyzed-tweets`
 
-### Pruebas desde consola
+Primero tenemos que crear el contenedor:
 
-Para correr el archivo desde consola, con el entorno de `predictor-env`:
 ```bash
-conda env --list
-conda activate predictor-env
-python ./analyzer/app.py
+cd analyzer
+docker build -t sentiment_analyzer:v1 .
 ```
 
-Para copiar más archivos dentro del contenedor y comprobar que sigue consumiendo:
+Ahora lo probaremos habiendo integrado en el docker-compose.yml, consumiendo los mensajes del topic `analyzed-tweets`:
+```bash
+docker-compose up -d
+docker exec -it broker /bin/bash
+
+# Consumir en tweets-input
+kafka-console-consumer --bootstrap-server broker:9092 --topic tweets-input --from-beginning
+
+# Consumir en analyzed tweets
+kafka-console-consumer --bootstrap-server broker:9092 --topic analyzed-tweets --from-beginning
+```
+
+Probamos que copiando más archivos dentro del contenedor y comprobar que sigue consumiendo:
 ```bash
 docker cp ./connectors/plaintext/dataset/twitter-extract-02.csv connect:/tmp/input/twitter-extract-02.csv
 docker cp ./connectors/plaintext/dataset/twitter-extract-03.csv connect:/tmp/input/twitter-extract-03.csv
 ```
 
-### Pruebas con el contenedor
+## Consultas agregadas con KSQLDB
 
-Primero tengo que testear que el contenedor funciona:
+El objetivo es poder realizar consultas agregadas sobre el topic `analyzed-tweets` utilizando KSQLDB.
 
 ```bash
-cd analyzer
-docker build -t sentiment_analyzer:v1 .
-
-docker run -it sentiment_analyzer:v1
+docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
 ```
 
-Después integraremos en el docker-compose.yml.
+Creamos un stream:
+```sql
+CREATE STREAM tweets_stream (
+    tweet_id BIGINT,
+    date VARCHAR,
+    username VARCHAR,
+    tweet VARCHAR,
+    sentiment_label VARCHAR,
+    sentiment_score DOUBLE
+) WITH (
+    KAFKA_TOPIC='analyzed-tweets',
+    VALUE_FORMAT='JSON'
+);
+```
+
+Consultamos el stream:
+```sql
+SELECT * FROM tweets_stream EMIT CHANGES;
+```
+
+Podemos hacer el copy de los archivos para comprobar que funciona, ya que los Tweets van apareciendo en esta consulta.
+
+Vista materializada para el conteo de sentimientos (agregación de resultados por label):
+```sql
+CREATE TABLE sentiment_counts AS
+SELECT 
+    SENTIMENT_LABEL, COUNT(*) AS count
+FROM 
+    tweets_stream
+GROUP BY 
+    SENTIMENT_LABEL;
+```
+
+Obtenemos el resultado:
+```sql
+SELECT * FROM sentiment_counts;
+```
+
+## Conectar con MongoDB utilizando un sink connector
+
+**Instalar el conector en la imagen de los conectores:**
+
+Hemos incluido las instrucciones en el ./connectors/Dockerfile
+
+**Iniciar la replicaset de la base de datos MongoDB:**
+
+Hemos incluido la configuración necesaria en el docker-compose.yml. Hay que tener en cuenta que para entornos productivos sería mejor distribuir la carga en diferentes contenedores.
+
+Comprobar que está el replicaset:
+```bash
+docker exec -it mongo bash
+mongosh
+rs.status()
+```
+
+No es necesario crear la colección porque mongo lo creará por mí.
+
+**Aplicar la configuración del conector:**
+```bash
+cd ./connectors/mongo
+curl -d @"connect-mongo-sink.json" -H "Content-Type: application/json" -X POST http://localhost:8083/connectors
+```
+
+**Ver documentos en Mongo:**
+
+```bash
+docker exec -it mongo bash
+mongosh
+use twitter_data
+show collections
+db.sentiment_tweets.find().pretty()
+```
+
+Añadir más documentos (haciendo la copia de los datos) y comprobar que aparecen en mongo volviendo a hacer `db.sentiment_tweets.find().pretty()`.
+
+
+

@@ -20,8 +20,9 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"   # Puerto mapeado para uso externo
-      - "9101:9101"   # Puerto para JMX (Java Management Extensions)
+      - 19092:19092    # Puerto mapeado para uso interno
+      - 9092:9092   # Puerto mapeado para uso externo
+      - 9101:9101   # Puerto para JMX (Java Management Extensions)
     networks:
       - dh-kafka-network
     environment:
@@ -32,10 +33,10 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
 
       # Define el protocolo de seguridad usado por cada listener. En este caso, ambos listeners usan PLAINTEXT (sin cifrado).
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT
 
       # Listeners que Kafka anunciará para que los clientes puedan conectarse. LISTENER_DOCKER_INTERNAL es para comunicación interna de Docker, y LISTENER_DOCKER_EXTERNAL es para comunicación externa.
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092,LISTENER_DOCKER_INTERNAL://broker:19092    
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
 
       # Factor de replicación para el tema (topic) de offsets de consumidores. En un entorno de producción, esto debería ser mayor que 1 para alta disponibilidad.
@@ -178,7 +179,14 @@ services:
     image: mongo:6.0.2
     networks:
       - dh-kafka-network
-    command: --replSet rs0
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
 
   analyzer:
     container_name: analyzer
