@@ -207,6 +207,19 @@ services:
       - mongodb
     networks:
       - dh-kafka-network
+
+  jupyter:
+    build: ./jupyter
+    container_name: jupyter
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+    ports:
+      - 8888:8888
+    depends_on:
+      - mongodb
+    networks:
+      - dh-kafka-network
+    
     
 
 networks:

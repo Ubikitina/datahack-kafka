@@ -1,5 +1,8 @@
 # Development Notes
 
+## Otros importantes:
+- Decir que tengo que hacer los builds de las imágenes antes.
+
 ## Fuente de datos
 Dado que la API de Twitter no está abierta, la captura de datos se realizará desde un archivo a un topic de Kafka.
 
@@ -149,3 +152,22 @@ Dentro veremos que están los tweets en la colección `sentiment_tweets`.
 
 Añadir más documentos (haciendo la copia de los datos) y comprobar que aparecen en mongo volviendo a hacer `db.sentiment_tweets.find().pretty()`.
 
+## Añadir Jupyter Notebook
+
+Creamos la carpeta `jupyter` con los archivos necesarios. También creamos el notebook `MongoDB.ipynb`.
+
+Para entrar a Jupyter, accederemos a http://localhost:8888/. Nos solicitará un Token. El Token se debe consultar realizando:
+
+```bash
+docker exec -it jupyter bash
+jupyter server list
+```
+
+Esto imprime un resultado así:
+```
+(base) jovyan@08c3c8660b64:~$ jupyter server list
+Currently running servers:
+http://08c3c8660b64:8888/?token=899207b901513ad7168a71b45b73a0bc73e8d8629bb0043d :: /home/jovyan
+```
+
+Copiar el token del URL e introducirlo en la web.
