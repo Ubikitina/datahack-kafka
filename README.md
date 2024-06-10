@@ -4,17 +4,14 @@
 
 El objetivo de este proyecto es diseñar e implementar un sistema de análisis de sentimiento de comentarios en Twitter utilizando Kafka y otros servicios del ecosistema de Big Data. Dado que la API de Twitter no está abierta, la captura de datos se realizará desde un archivo a un topic de Kafka. Posteriormente, se llevará a cabo un análisis de sentimientos en tiempo real utilizando el [analizador de sentimientos](https://huggingface.co/blog/sentiment-analysis-python) de Python proporcionado por Hugging Face. Finalmente, los resultados serán transferidos a otro topic de Kafka, desde el cual se implementará un mecanismo de consumo de la información para obtener los resultados agregados.
 
-## Tabla de Contenidos
+El proyecto ha sido realizado como parte del Máster Experto Big Data Architecture & Engineering en Datahack. Tecnologías utilizadas:
+- Kafka
+- MongoDB
+- Jupyter Notebook
+- Docker
+- Python
 
-- [Sistema de Análisis de Sentimiento de Comentarios en Twitter](#sistema-de-análisis-de-sentimiento-de-comentarios-en-twitter)
-  - [Descripción del Proyecto](#descripción-del-proyecto)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
-  - [Requisitos del Sistema](#requisitos-del-sistema)
-  - [Instalación](#instalación)
-  - [Configuración](#configuración)
-  - [Uso](#uso)
-  - [Arquitectura del Sistema](#arquitectura-del-sistema)
-  - [Licencia](#licencia)
+
 
 ## Requisitos del Sistema
 
