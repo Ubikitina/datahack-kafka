@@ -115,28 +115,15 @@ SELECT * FROM sentiment_counts;
 
 ## Conectar con MongoDB utilizando un sink connector
 
-**Instalar el conector en la imagen de los conectores:**
+**Instalar el conector en la imagen de los conectores y aplicar la configuración del conector:**
 
-Hemos incluido las instrucciones en el ./connectors/Dockerfile
+Hemos incluido las instrucciones en el ./connectors/Dockerfile y en el start.sh correspondiente.
 
 **Iniciar la replicaset de la base de datos MongoDB:**
 
 Hemos incluido la configuración necesaria en el docker-compose.yml. Hay que tener en cuenta que para entornos productivos sería mejor distribuir la carga en diferentes contenedores.
 
-Comprobar que está el replicaset:
-```bash
-docker exec -it mongo bash
-mongosh
-rs.status()
-```
-
-No es necesario crear la colección porque mongo lo creará por mí.
-
-**Aplicar la configuración del conector:**
-```bash
-cd ./connectors/mongo
-curl -d @"connect-mongo-sink.json" -H "Content-Type: application/json" -X POST http://localhost:8083/connectors
-```
+Por otra parte, no es necesario crear la colección porque mongo lo creará por mí.
 
 **Ver documentos en Mongo:**
 

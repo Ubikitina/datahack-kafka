@@ -14,6 +14,8 @@ COPY ./plaintext/connect-file-source.json .
 
 RUN confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.12.0
 
+COPY ./mongo/connect-mongo-sink.json .
+
 # Script to start
 
 COPY start.sh .
