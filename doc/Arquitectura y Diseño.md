@@ -11,6 +11,7 @@
     - [Análisis de datos y almacenamiento](#análisis-de-datos-y-almacenamiento)
       - [KSQLDB Server y Cli](#ksqldb-server-y-cli)
       - [MongoDB y Jupyter Notebook](#mongodb-y-jupyter-notebook)
+  - [Futuras Líneas de Trabajo](#futuras-líneas-de-trabajo)
 
 ---
 
@@ -108,3 +109,24 @@ MongoDB se ha seleccionado para satisfacer las necesidades de almacenamiento a l
 MongoDB destaca por su capacidad de almacenamiento orientado a documentos y su flexibilidad para manejar datos de manera eficiente. Esto lo hace adecuado para almacenar los datos procesados de manera persistente y permitir análisis complejos y exploratorios mediante herramientas como Jupyter Notebook. Las capacidades avanzadas de consulta y manipulación de datos se potencian con el uso de librerías como `pymongo`, `pandas` y `matplotlib`. La elección de MongoDB junto con Jupyter se fundamenta en la flexibilidad que ofrece MongoDB para la integración con esta herramienta de análisis.
 
 Además, otro punto a favor de MongoDB es la existencia del Mongo Sink Connector, que permite realizar la conexión al topic de Kafka de manera efectiva, asegurando su adecuación para un escenario de producción. Además, el uso de Kafka Connect aporta una gestión centralizada de la salida de datos.
+
+
+## Futuras Líneas de Trabajo
+
+Se han identificado las siguientes líneas de trabajo con el propósito de preparar el sistema para producción, así como para añadir nuevas funcionalidades:
+
+1. **Seguridad en MongoDB:** Configurar autenticación y autorización en MongoDB para proteger los datos almacenados. Esto incluye establecer contraseñas fuertes y roles adecuados para los usuarios que accedan a la base de datos. En la solución actual, la autenticación ha sido omitida por simplicidad, pero es indispensable para la puesta en producción.
+
+2. **Implementación de ReplicaSet en MongoDB:** Configurar una replicación adecuada en MongoDB para garantizar la alta disponibilidad y la recuperación ante fallos. Con la configuración actual (véase el servicio mongo en [docker-compose.yaml](../docker-compose.yml)), se ha establecido un ReplicaSet llamado 'rs0' con un único miembro en 'mongo:27017'. Esta configuración no proporciona alta disponibilidad ni redundancia, ya que solo hay un único nodo. Hay que implementar más nodos (al menos tres: uno primario y dos secundarios).
+
+3. **Implementación de una configuración sencilla:** incluyendo la gestión de los parámetros de configuración en un Config y gestión de las credenciales en un Secret.
+
+4. **Mejoras en la aplicación app.py:**
+
+   1. Refactorización y Modularización del Código para hacerlo mantenible.
+
+   2. Obtención Dinámica del Esquema Avro mediante llamadas al Schema Registry en lugar de definirlos estáticamente.
+
+   3. Mejora del Sistema de Registro (Logging): Desarrollar un sistema de logging más robusto para capturar y registrar eventos importantes y errores en la aplicación. Esto facilitará la monitorización y depuración del sistema.
+
+5. **Integración con otras fuentes de datos como Mastodon mediante su API REST:** Aunque durante este proyecto se ha logrado conectar a su API REST y analizar sentimientos localmente (mediante un Jupyter), haría falta integrarlo a este proyecto mediante la implementación de un source conector para la REST API. Esto permitirá analizar los mensajes de Mastodon y ampliar la cobertura del análisis de sentimientos más allá de Twitter.
