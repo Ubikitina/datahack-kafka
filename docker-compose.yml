@@ -80,7 +80,7 @@ services:
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
   connect:
-    image: my-kafka-connect:v1
+    build: ./connectors
     hostname: connect
     container_name: connect
     depends_on:
@@ -189,8 +189,8 @@ services:
       retries: 30
 
   analyzer:
+    build: ./analyzer
     container_name: analyzer
-    image: sentiment_analyzer:v1
     networks:
       - dh-kafka-network
     depends_on:
