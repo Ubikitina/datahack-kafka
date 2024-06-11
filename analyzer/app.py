@@ -46,9 +46,8 @@ def decode_avro_message(message_value, schema):
 
 # Funcion para el caso de exito en la produccion del metodo
 def on_send_success(record_metadata):
-  print(record_metadata.topic)
-  print(record_metadata.partition)
-  print(record_metadata.offset)
+  print(f"Topic: {record_metadata.topic}, Partition: {record_metadata.partition}, Offset: {record_metadata.offset}")
+
 
 # Funcion para el caso de error
 def on_send_error(ex):
