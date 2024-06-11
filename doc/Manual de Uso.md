@@ -5,6 +5,7 @@
   - [Carga de datos](#carga-de-datos)
   - [Consultas agregadas con KSQLDB en Tiempo Real](#consultas-agregadas-con-ksqldb-en-tiempo-real)
   - [Consultas con Mongo Express](#consultas-con-mongo-express)
+  - [Análisis de datos en Jupyter Notebook](#análisis-de-datos-en-jupyter-notebook)
 
 ---
 
@@ -128,3 +129,46 @@ Al hacer clic en la colección `sentiment_tweets`, Mongo Express te permite visu
 
 Además de las funcionalidades mencionadas, Mongo Express también permite crear índices, exportar e importar datos y gestionar usuarios y roles de la base de datos MongoDB.
 
+
+
+## Análisis de datos en Jupyter Notebook
+
+Jupyter Notebook es una herramienta poderosa para que los analistas de datos realicen un análisis avanzado de los datos almacenados en MongoDB utilizando librerías específicas de Python. Está diseñada para que los analistas de datos de Twitter puedan investigar las dinámicas de sentimientos en el histórico de los datos.
+
+Para acceder a Jupyter Notebook, abre tu navegador y ve a http://localhost:8888/. Se te solicitará un token de autenticación. Para obtener este token, sigue estos pasos:
+
+1. Abre una terminal y ejecuta el siguiente comando para entrar en el contenedor de Jupyter:
+
+    ```bash
+    docker exec -it jupyter bash
+    ```
+
+2. Dentro del contenedor, ejecuta este comando para listar los servidores de Jupyter en ejecución:
+
+    ```bash
+    jupyter server list
+    ```
+
+3. Verás un resultado similar a este:
+
+    ```
+    (base) jovyan@08c3c8660b64:~$ jupyter server list
+    Currently running servers:
+    http://08c3c8660b64:8888/?token=899207b901513ad7168a71b45b73a0bc73e8d8629bb0043d :: /home/jovyan
+    ```
+
+4. Copia el token de la URL y pégalo en la página web de Jupyter Notebook.
+
+
+![](./img/uso/06.gif)
+
+Una vez dentro de Jupyter Notebook, verás que hay un cuaderno precargado llamado [MongoDB.ipynb](../jupyter/MongoDB.ipynb). Este cuaderno contiene ejemplos y consultas ya programadas para interactuar con los datos en MongoDB.
+
+Para explorar y ejecutar las consultas:
+
+1. Abre el cuaderno `MongoDB.ipynb`.
+2. Sigue las instrucciones y ejecuta las celdas de código. Cada celda se puede ejecutar seleccionándola y presionando `Shift + Enter`.
+
+![](./img/uso/07.gif)
+
+Jupyter Notebook proporciona un entorno interactivo y flexible para trabajar con tus datos, facilitando la experimentación y el descubrimiento de insights valiosos.
