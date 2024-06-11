@@ -51,6 +51,9 @@ Para **desplegar el sistema**, siga estos pasos:
 
 ![](./img/operacion/01.gif)
 
+Este comando despliega todos los servicios necesarios e introduce el archivo de entrada [twitter-extract-01.csv](../connectors/plaintext/dataset/twitter-extract-01.csv). A partir de este archivo, el pipeline se ejecuta automáticamente: los tweets se transfieren del archivo a un topic de Kafka, luego un analizador de sentimiento procesa los tweets y vuelca los resultados a un segundo topic de Kafka. Finalmente, los sistemas de análisis de datos se conectan a este segundo topic para extraer y procesar los datos. Además, se carga el cuaderno [MongoDB.ipynb](../jupyter/MongoDB.ipynb) en Jupyter como un ejemplo o punto de partida para el análisis de datos.
+
+
 
 ## Configuración y Detalle Técnico del sistema
 
