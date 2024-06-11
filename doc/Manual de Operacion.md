@@ -49,6 +49,8 @@ Para **desplegar el sistema**, siga estos pasos:
    docker-compose up -d
    ```
 
+![](./img/operacion/01.gif)
+
 
 ## Configuración y Detalle Técnico del sistema
 
@@ -104,7 +106,11 @@ Puede consumir mensajes directamente desde los topics utilizando la consola del 
    kafka-console-consumer --bootstrap-server broker:9092 --topic analyzed-tweets --from-beginning
    ```
 
+![](./img/operacion/02.gif)
+
 **Opción 2**: Desde la Web de Control Center, accediendo a [Control Center](http://localhost:9021/clusters).
+
+![](./img/operacion/03.gif)
 
 
 ### Ver documentos en MongoDB
@@ -135,3 +141,4 @@ Para ver los documentos almacenados en MongoDB, siga estos pasos:
    db.sentiment_tweets.find().pretty()
    ```
 
+![](./img/operacion/04.gif)
